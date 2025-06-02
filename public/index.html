@@ -327,6 +327,8 @@
                 padding: 4rem 2rem;
                 color: rgba(255, 255, 255, 0.8);
                 font-size: 1.1rem;
+                width: 100%;
+                height: 100%;
             }
 
             @media (max-width: 768px) {
@@ -901,9 +903,9 @@
                     // Fetch the SVG content
                     const response = await fetch(url);
                     const svgContent = await response.text();
-                    
+
                     await navigator.clipboard.writeText(svgContent);
-                    
+
                     // Simple feedback - you could enhance this with a toast notification
                     const btn = event.target;
                     const originalText = btn.textContent;
@@ -915,7 +917,6 @@
                     }, 1500);
                 } catch (err) {
                     console.error("Failed to copy SVG:", err);
-                    alert("Failed to copy SVG to clipboard");
                 }
             }
         </script>
