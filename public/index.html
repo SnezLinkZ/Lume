@@ -432,10 +432,10 @@
                 "filled",
                 "solid",
                 "stroke",
-                "duo-solid",
-                "duo-stroke",
                 "contrast",
                 "bold",
+                "duo-solid",
+                "duo-stroke",
             ];
             const defaultVersion = "filled";
 
@@ -730,9 +730,17 @@
                     .map((version) => {
                         const selected =
                             version === currentVersion ? "selected" : "";
-                        const versionLabel =
-                            version.charAt(0).toUpperCase() +
-                            version.slice(1).replace("-", " ");
+                        let versionLabel = version.charAt(0).toUpperCase() + version.slice(1);
+                        
+                        // Special formatting for duo types
+                        if (version === "duo-solid") {
+                            versionLabel = "Duo Solid";
+                        } else if (version === "duo-stroke") {
+                            versionLabel = "Duo Stroke";
+                        } else {
+                            versionLabel = versionLabel.replace("-", " ");
+                        }
+                        
                         return `<option value="${version}" ${selected}>${versionLabel}</option>`;
                     })
                     .join("");
