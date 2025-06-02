@@ -77,6 +77,41 @@
                 box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
             }
 
+            .regex-toggle {
+                padding: 12px 16px;
+                border: 2px solid #e1e5e9;
+                border-radius: 50px;
+                background: white;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                font-size: 14px;
+                font-weight: 600;
+                color: #6b7280;
+                min-width: 70px;
+                justify-content: center;
+            }
+
+            .regex-toggle:hover {
+                border-color: #667eea;
+                background: #f8fafc;
+            }
+
+            .regex-toggle.active {
+                border-color: #667eea;
+                background: #667eea;
+                color: white;
+                box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+            }
+
+            .regex-label {
+                font-family: 'Courier New', monospace;
+                font-size: 12px;
+                font-weight: bold;
+            }
+
             .filter-controls {
                 display: flex;
                 gap: 1rem;
@@ -386,6 +421,14 @@
                         class="search-input"
                         placeholder="Search icons by name..."
                     />
+                    <button id="regexToggle" class="regex-toggle" title="Toggle regex mode">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M3 17h6l-2-2V9l2-2H3l2 2v6l-2 2z"/>
+                            <path d="M14 17h6l-2-2V9l2-2h-6l2 2v6l-2 2z"/>
+                            <circle cx="12" cy="12" r="1"/>
+                        </svg>
+                        <span class="regex-label">.*</span>
+                    </button>
                 </div>
 
                 <div class="filter-controls">
@@ -424,6 +467,7 @@
             let allIcons = [];
             let filteredIcons = [];
             let groupedIcons = new Map(); // Icons grouped by base name
+            let regexMode = false; // Track if regex mode is enabled
 
             // Icon cache to store SVG content and avoid re-loading
             const iconCache = new Map();
@@ -468,6 +512,13 @@
                 .getElementById("viewSize")
                 .addEventListener("change", (e) => {
                     updateViewSize();
+                });
+
+            // Regex toggle functionality
+            document
+                .getElementById("regexToggle")
+                .addEventListener("click", () => {
+                    toggleRegexMode();
                 });
 
             async function loadIcons() {
@@ -663,16 +714,28 @@
             }
 
             function filterIcons() {
-                const searchTerm = document
-                    .getElementById("searchInput")
-                    .value.toLowerCase();
+                const searchTerm = document.getElementById("searchInput").value;
                 const sortBy = document.getElementById("sortBy").value;
 
                 // Filter grouped icons by search term
-                filteredIcons = Array.from(groupedIcons.values()).filter(
-                    (iconGroup) =>
-                        iconGroup.baseName.toLowerCase().includes(searchTerm),
-                );
+                if (regexMode && searchTerm.trim()) {
+                    try {
+                        const regex = new RegExp(searchTerm, 'i');
+                        filteredIcons = Array.from(groupedIcons.values()).filter(
+                            (iconGroup) => regex.test(iconGroup.baseName)
+                        );
+                    } catch (error) {
+                        // Invalid regex - show no results
+                        filteredIcons = [];
+                    }
+                } else {
+                    // Normal string search (case-insensitive)
+                    const lowerSearchTerm = searchTerm.toLowerCase();
+                    filteredIcons = Array.from(groupedIcons.values()).filter(
+                        (iconGroup) =>
+                            iconGroup.baseName.toLowerCase().includes(lowerSearchTerm),
+                    );
+                }
 
                 // Sort icon groups
                 filteredIcons.sort((a, b) => {
@@ -876,6 +939,23 @@
                         grid.style.gridTemplateColumns =
                             "repeat(auto-fill, minmax(200px, 1fr))";
                 }
+            }
+
+            function toggleRegexMode() {
+                regexMode = !regexMode;
+                const toggleButton = document.getElementById("regexToggle");
+                const searchInput = document.getElementById("searchInput");
+                
+                if (regexMode) {
+                    toggleButton.classList.add("active");
+                    searchInput.placeholder = "Search icons with regex (e.g., ^arrow|calendar$)...";
+                } else {
+                    toggleButton.classList.remove("active");
+                    searchInput.placeholder = "Search icons by name...";
+                }
+                
+                // Re-filter with current search term
+                filterIcons();
             }
 
             async function downloadIcon(filename) {
