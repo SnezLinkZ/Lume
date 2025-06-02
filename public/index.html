@@ -5,6 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Icon Explorer</title>
         <style>
+            @import url("https://fonts.googleapis.com/css2?family=Teachers:ital,wght@0,400..800;1,400..800&display=swap");
             * {
                 margin: 0;
                 padding: 0;
@@ -12,8 +13,7 @@
             }
 
             body {
-                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
-                    system-ui, sans-serif;
+                font-family: -apple-system, "Teachers", sans-serif;
                 background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
                 min-height: 100vh;
                 color: #333;
@@ -107,7 +107,7 @@
             }
 
             .regex-label {
-                font-family: 'Courier New', monospace;
+                font-family: monospace;
                 font-size: 12px;
                 font-weight: bold;
             }
@@ -404,13 +404,20 @@
                     gap: 1rem;
                 }
             }
+            input,
+            select {
+                font-family: -apple-system, "Teachers", sans-serif;
+            }
+            .btn svg {
+                height: 100%;
+            }
         </style>
     </head>
     <body>
         <div class="container">
             <div class="header">
-                <h1>Icon Explorer</h1>
-                <p>Browse, search, and download your SVG icons</p>
+                <h1>Lume</h1>
+                <p>All your favorite icons.</p>
             </div>
 
             <div class="controls">
@@ -421,11 +428,22 @@
                         class="search-input"
                         placeholder="Search icons by name..."
                     />
-                    <button id="regexToggle" class="regex-toggle" title="Toggle regex mode">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M3 17h6l-2-2V9l2-2H3l2 2v6l-2 2z"/>
-                            <path d="M14 17h6l-2-2V9l2-2h-6l2 2v6l-2 2z"/>
-                            <circle cx="12" cy="12" r="1"/>
+                    <button
+                        id="regexToggle"
+                        class="regex-toggle"
+                        title="Toggle regex mode"
+                    >
+                        <svg
+                            width="20"
+                            height="20"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                        >
+                            <path d="M3 17h6l-2-2V9l2-2H3l2 2v6l-2 2z" />
+                            <path d="M14 17h6l-2-2V9l2-2h-6l2 2v6l-2 2z" />
+                            <circle cx="12" cy="12" r="1" />
                         </svg>
                         <span class="regex-label">.*</span>
                     </button>
@@ -686,8 +704,8 @@
                 container.innerHTML = `
                 <div class="loading-content">
                     <div class="loading-spinner"></div>
-                    <h2>Loading Your Icons</h2>
-                    <p>Preparing your beautiful collection...</p>
+                    <h2>Loading Lume Icons</h2>
+                    <p>Gathering the collection...</p>
                     <div class="loading-progress">
                         <div class="progress-bar">
                             <div class="progress-fill" id="progressFill"></div>
@@ -720,10 +738,10 @@
                 // Filter grouped icons by search term
                 if (regexMode && searchTerm.trim()) {
                     try {
-                        const regex = new RegExp(searchTerm, 'i');
-                        filteredIcons = Array.from(groupedIcons.values()).filter(
-                            (iconGroup) => regex.test(iconGroup.baseName)
-                        );
+                        const regex = new RegExp(searchTerm, "i");
+                        filteredIcons = Array.from(
+                            groupedIcons.values(),
+                        ).filter((iconGroup) => regex.test(iconGroup.baseName));
                     } catch (error) {
                         // Invalid regex - show no results
                         filteredIcons = [];
@@ -733,7 +751,9 @@
                     const lowerSearchTerm = searchTerm.toLowerCase();
                     filteredIcons = Array.from(groupedIcons.values()).filter(
                         (iconGroup) =>
-                            iconGroup.baseName.toLowerCase().includes(lowerSearchTerm),
+                            iconGroup.baseName
+                                .toLowerCase()
+                                .includes(lowerSearchTerm),
                     );
                 }
 
@@ -822,10 +842,16 @@
                 </div>-->
                 <div class="icon-actions">
                     <button class="btn btn-primary" onclick="downloadIcon('${currentIcon.filename}')">
-                        Download
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M13 4C13 3.44772 12.5523 3 12 3C11.4477 3 11 3.44772 11 4V11.3216C10.3658 11.2997 9.73211 11.257 9.10001 11.1935C8.70512 11.1538 8.32413 11.3514 8.12909 11.697C7.93404 12.0427 7.96187 12.471 8.2 12.7885C8.98959 13.8413 9.90559 14.792 10.9269 15.6196C11.2392 15.8726 11.6199 16 12 16C12.3801 16 12.7608 15.8726 13.0731 15.6195C14.0944 14.792 15.0104 13.8413 15.8 12.7885C16.0381 12.471 16.066 12.0427 15.8709 11.697C15.6759 11.3514 15.2949 11.1538 14.9 11.1935C14.2679 11.257 13.6342 11.2997 13 11.3216V4Z" fill="#ffffff"/>
+<path d="M4 15C4 14.4477 3.55228 14 3 14C2.44772 14 2 14.4477 2 15C2 18.3137 4.68629 21 8 21H16C19.3137 21 22 18.3137 22 15C22 14.4477 21.5523 14 21 14C20.4477 14 20 14.4477 20 15C20 17.2091 18.2091 19 16 19H8C5.79086 19 4 17.2091 4 15Z" fill="#ffffff"/>
+</svg>
                     </button>
                     <button class="btn btn-secondary" onclick="copyIcon('${currentIcon.url}')">
-                        Copy SVG
+                        <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M11.5 19.5H17.2C16.61 20.97 15.18 22 13.5 22H6.5C4.29 22 2.5 20.21 2.5 18V10C2.5 7.96 4.03 6.28003 6 6.03003V14C6 17.03 8.47 19.5 11.5 19.5ZM20 6.25H22.12C22.06 6.16 21.99 6.08 21.91 6L18.5 2.59009C18.42 2.51009 18.34 2.43989 18.25 2.38989V4.5C18.25 5.46 19.04 6.25 20 6.25ZM20 7.75C18.21 7.75 16.75 6.29 16.75 4.5V2H11.5C9.29 2 7.5 3.79 7.5 6V14C7.5 16.21 9.29 18 11.5 18H18.5C20.71 18 22.5 16.21 22.5 14V7.75H20Z" fill="black"/>
+</svg>
+
                     </button>
                 </div>
             `;
@@ -945,15 +971,16 @@
                 regexMode = !regexMode;
                 const toggleButton = document.getElementById("regexToggle");
                 const searchInput = document.getElementById("searchInput");
-                
+
                 if (regexMode) {
                     toggleButton.classList.add("active");
-                    searchInput.placeholder = "Search icons with regex (e.g., ^arrow|calendar$)...";
+                    searchInput.placeholder =
+                        "Search icons with regex (e.g., ^arrow|calendar$)...";
                 } else {
                     toggleButton.classList.remove("active");
                     searchInput.placeholder = "Search icons by name...";
                 }
-                
+
                 // Re-filter with current search term
                 filterIcons();
             }
