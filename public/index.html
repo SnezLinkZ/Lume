@@ -760,7 +760,7 @@
                         Download
                     </button>
                     <button class="btn btn-secondary" onclick="copyIcon('${currentIcon.url}')">
-                        Copy URL
+                        Copy SVG
                     </button>
                 </div>
             `;
@@ -896,25 +896,27 @@
                 }
             }
 
-            function copyIcon(url) {
-                const fullUrl = window.location.origin + url;
-                navigator.clipboard
-                    .writeText(fullUrl)
-                    .then(() => {
-                        // Simple feedback - you could enhance this with a toast notification
-                        const btn = event.target;
-                        const originalText = btn.textContent;
-                        btn.textContent = "Copied!";
-                        btn.style.background = "#48bb78";
-                        setTimeout(() => {
-                            btn.textContent = originalText;
-                            btn.style.background = "";
-                        }, 1500);
-                    })
-                    .catch((err) => {
-                        console.error("Failed to copy URL:", err);
-                        alert("Failed to copy URL to clipboard");
-                    });
+            async function copyIcon(url) {
+                try {
+                    // Fetch the SVG content
+                    const response = await fetch(url);
+                    const svgContent = await response.text();
+                    
+                    await navigator.clipboard.writeText(svgContent);
+                    
+                    // Simple feedback - you could enhance this with a toast notification
+                    const btn = event.target;
+                    const originalText = btn.textContent;
+                    btn.textContent = "Copied!";
+                    btn.style.background = "#48bb78";
+                    setTimeout(() => {
+                        btn.textContent = originalText;
+                        btn.style.background = "";
+                    }, 1500);
+                } catch (err) {
+                    console.error("Failed to copy SVG:", err);
+                    alert("Failed to copy SVG to clipboard");
+                }
             }
         </script>
     </body>
