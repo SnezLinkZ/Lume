@@ -432,10 +432,10 @@
                 "filled",
                 "solid",
                 "stroke",
+                "duo_solid",
+                "duo_stroke",
                 "contrast",
                 "bold",
-                "duo-solid",
-                "duo-stroke",
             ];
             const defaultVersion = "filled";
 
@@ -730,20 +730,15 @@
                     .map((version) => {
                         const selected =
                             version === currentVersion ? "selected" : "";
-                        let versionLabel = version.charAt(0).toUpperCase() + version.slice(1);
-                        
-                        // Special formatting for duo types
-                        if (version === "duo-solid") {
-                            versionLabel = "Duo Solid";
-                        } else if (version === "duo-stroke") {
-                            versionLabel = "Duo Stroke";
-                        } else {
-                            versionLabel = versionLabel.replace("-", " ");
-                        }
-                        
+                        const versionLabel =
+                            version.charAt(0).toUpperCase() +
+                            version.slice(1).replace("-", " ");
                         return `<option value="${version}" ${selected}>${versionLabel}</option>`;
                     })
-                    .join("");
+                    .join("")
+                    .replace("Duo_solid", "Duo Solid")
+                    .replace("Duo_stroke", "Duo Stroke")
+                    .replace("Bold", "Stroke");
 
                 card.innerHTML = `
                 <div class="icon-preview" data-icon-group="${iconGroup.baseName}">
@@ -757,9 +752,9 @@
                         ${versionOptions}
                     </select>
                 </div>
-                <div class="icon-details">
+                <!--<div class="icon-details">
                     ${currentIcon.dimensions} • ${sizeInKB} KB<br>
-                </div>
+                </div>-->
                 <div class="icon-actions">
                     <button class="btn btn-primary" onclick="downloadIcon('${currentIcon.filename}')">
                         Download

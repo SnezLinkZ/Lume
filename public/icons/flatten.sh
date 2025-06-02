@@ -1,34 +1,24 @@
 #!/bin/bash
 
-# Function to move and rename SVG files from a subdirectory with suffix
-move_svgs() {
-  local dir="$1"
-  local suffix="$2"
+# Loop through all regular files in the current directory
+for file in *; do
+  [ -f "$file" ] || continue
 
-  if [ -d "$dir" ]; then
-    for file in "$dir"/*.svg; do
-      [ -f "$file" ] || continue
+  # Replace dash immediately after "duo" with underscore
+  new_file="$(echo "$file" | sed 's/\(duo\)-/\1_/')"
 
-      base="$(basename "$file" .svg)"
-      new_name="${base}-${suffix}.svg"
-
-      # If new file exists, prompt before overwriting
-      if [ -e "$new_name" ]; then
-        echo "File '$new_name' already exists. Overwrite '$file'? (y/n)"
-        read -r answer
-        if [ "$answer" != "y" ]; then
-          echo "Skipping '$file'"
-          continue
-        fi
+  # Rename if the filename has changed
+  if [ "$file" != "$new_file" ]; then
+    if [ -e "$new_file" ]; then
+      echo "File '$new_file' already exists. Overwrite '$file'? (y/n)"
+      read -r answer
+      if [ "$answer" != "y" ]; then
+        echo "Skipping '$file'"
+        continue
       fi
+    fi
 
-      mv "$file" "./$new_name"
-      echo "Moved '$file' → './$new_name'"
-    done
-  else
-    echo "Directory '$dir' does not exist, skipping."
+    mv "$file" "$new_file"
+    echo "Renamed '$file' → '$new_file'"
   fi
-}
-
-move_svgs "filled" "filled"
-move_svgs "bold" "bold"
+done
