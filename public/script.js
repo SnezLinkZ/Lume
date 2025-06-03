@@ -234,6 +234,7 @@ function updateLoadingProgress() {
 function filterIcons() {
     const searchTerm = document.getElementById("searchInput").value;
     const sortBy = document.getElementById("sortBy").value;
+    const iconType = document.getElementById("iconType").value;
 
     // Filter grouped icons by search term
     if (regexMode && searchTerm.trim()) {
@@ -253,6 +254,13 @@ function filterIcons() {
             iconGroup.baseName.toLowerCase().includes(lowerSearchTerm),
         );
     }
+
+    //document.body.innerHTML = JSON.stringify(filteredIcons);
+    /*filteredIcons = filteredIcons.filter(
+        (iconGroup) =>
+            (iconType === "legacy") ===
+                (iconGroup.defaultVersion === "filled") || iconType === "all",
+    );*/
 
     // Sort icon groups
     filteredIcons.sort((a, b) => {
