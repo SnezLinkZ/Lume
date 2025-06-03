@@ -234,7 +234,7 @@ function updateLoadingProgress() {
 function filterIcons() {
     const searchTerm = document.getElementById("searchInput").value;
     const sortBy = document.getElementById("sortBy").value;
-    const iconType = document.getElementById("iconType").value;
+    //const iconType = document.getElementById("iconType").value;
 
     // Filter grouped icons by search term
     if (regexMode && searchTerm.trim()) {
